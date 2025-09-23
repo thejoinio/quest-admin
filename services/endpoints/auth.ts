@@ -5,7 +5,7 @@ import {
   LoginResponse,
   OtpRequestResponse,
   OtpVerifyResponse,
-} from "../../types/authType";
+} from "@/types/authType";
 import { post } from "../axios";
 
 export const AuthService = {

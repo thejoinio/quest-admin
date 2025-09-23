@@ -63,12 +63,14 @@ export function SetupForm() {
   const { mutate: login, isPending } = useLogin({
     onSuccess: (data) => {
       const token = data.data?.token;
+      const role = data.data?.role;
       form.reset();
       if (token) {
         Cookies.set("token", token, {
           secure: true,
           sameSite: "Strict",
         });
+        if (role) Cookies.set("role", role);
         router.push("/dashboard");
       }
     },
