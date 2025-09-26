@@ -12,17 +12,17 @@ export const AuthService = {
   createAccount: async (
     payload: CreateAccountPayload
   ): Promise<AuthResponse> => {
-    const response = await post<AuthResponse>("/auth/create-account", payload);
+    const response = await post<AuthResponse>("/auth/admin/create-account", payload);
     return response;
   },
 
   login: async (payload: LoginPayload): Promise<LoginResponse> => {
-    const response = await post<LoginResponse>("/auth/login", payload);
+    const response = await post<LoginResponse>("/auth/admin/login", payload);
     return response;
   },
 
   requestOtp: async (email: string): Promise<OtpRequestResponse> => {
-    const response = await post<OtpRequestResponse>("/auth/request-otp", {
+    const response = await post<OtpRequestResponse>("/auth/admin/request-otp", {
       email,
     });
     return response;
@@ -32,7 +32,7 @@ export const AuthService = {
     email: string;
     otp: string;
   }): Promise<OtpVerifyResponse> => {
-    const response = await post<OtpVerifyResponse>("/auth/verify-otp", payload);
+    const response = await post<OtpVerifyResponse>("/auth/admin/verify-otp", payload);
     return response;
   },
 };

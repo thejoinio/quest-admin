@@ -22,6 +22,7 @@ import { useRouter } from "next/navigation";
 import { useVisitorData } from "@fingerprintjs/fingerprintjs-pro-react";
 import { toast } from "sonner";
 import { useLogin } from "@/services/hooks/useLogin";
+import { usePasswordEncryptor, fetchEncryptionKey } from "@/services/hooks/useEncryption";
 
 const formSchema = z.object({
   email: z.email({ message: "Please enter a valid email address" }),
@@ -37,6 +38,7 @@ const DISABLE_SECURITY =
 export function SetupForm() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const { encryptPassword } = usePasswordEncryptor();
 
   const {
     isLoading: isLoadingFPJS,
@@ -76,14 +78,25 @@ export function SetupForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     if (errorFPJS) {
       toast.error("Security check failed!", { description: errorFPJS.message });
       return;
     }
+
+    const encryptionKeyRes = await fetchEncryptionKey();
+    if (!encryptionKeyRes?.data?.sessionId) {
+      toast.error("Security check failed!", { description: "Failed to generate encryption keys." });
+      return;
+    }
+    const encryptedPassword = await encryptPassword(values.password, encryptionKeyRes.data.publicKey);
+
     login({
       email: values.email,
-      password: values.password,
+      // password: values.password,
+      encryptedPassword: encryptedPassword,
+      sessionId: encryptionKeyRes.data.sessionId,
+
       fingerprintData: DISABLE_SECURITY
         ? { visitorId: "test-visitor-id", requestId: "test-request-id" }
         : data,

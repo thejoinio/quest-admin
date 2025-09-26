@@ -3,8 +3,11 @@ export interface CreateAccountPayload {
   email: string;
   username: string;
   country: string;
-  password: string;
-  confirmPassword: string; // confirm_password
+  // password: string;
+  // confirmPassword: string; // confirm_password
+
+  encryptedPassword: string,
+  sessionId: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   fingerprintData: any // fingerprint_data
 }
@@ -17,7 +20,10 @@ export interface AuthResponse {
 //Login
 export interface LoginPayload {
   email: string;
-  password: string;
+  // password: string;
+
+  encryptedPassword: string,
+  sessionId: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   fingerprintData?: any // fingerprint_data
 }
