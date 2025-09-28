@@ -26,6 +26,7 @@ export default function TopUsers() {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const { data: usersData } = useFetchAdminDashboardOverviewLeaderboard(page, limit);
+  console.log("🚀 ~ TopUsers ~ usersData:", usersData)
 
   if (!isLarge) {
     return <MobileTopUsers

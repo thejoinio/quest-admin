@@ -26,7 +26,11 @@ import Mobile from "./Mobile";
 import { useIsLargeScreen } from "@/services/hooks/useResponsiveScreen";
 import { useAdminFetchUsers } from "@/services/hooks/useAdminHomeManagement";
 import { PaginationComponent } from "@/components/PaginationComponent";
-import { IRankFilter } from "@/services/endpoints/dashboard/admin";
+import {
+  IFilterType,
+  IRankFilter,
+  IUserType,
+} from "@/services/endpoints/dashboard/admin";
 import { EmptyState } from "@/components/empty";
 import { Spinner } from "@/components/preloader";
 
@@ -35,7 +39,17 @@ export default function Page() {
 
   const [searchInput, setSearchInput] = useState("");
   const [searchValue, setSearchValue] = useState("");
-  const [rankFilter, setRankFilter] = useState<IRankFilter | undefined>();
+  const [rankFilter, setRankFilter] = useState<IRankFilter | undefined>(
+    undefined
+  );
+  const [filterBy, setFilterBy] = useState<IFilterType>("all");
+  const [userTypeFilter, setUserTypeFilter] = useState<IUserType | undefined>(
+    undefined
+  );
+  const searchString =
+    searchValue && userTypeFilter
+      ? `${searchValue}, ${userTypeFilter}`
+      : searchValue || userTypeFilter || "";
 
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
@@ -44,7 +58,7 @@ export default function Page() {
     page,
     limit,
     rankFilter,
-    searchValue
+    searchString
   );
 
   const handleSearch = (e: React.FormEvent) => {
@@ -120,13 +134,19 @@ export default function Page() {
                 </p>
 
                 <Select // defaultValue='rank'
-                  value={rankFilter}
-                  onValueChange={(value) =>
-                    handleRankFilter(value.trim() as IRankFilter)
-                  }
+                  value={filterBy}
+                  onValueChange={(value) => {
+                    if (value === "all") {
+                      setRankFilter(undefined);
+                      setUserTypeFilter(undefined);
+                      setFilterBy("all");
+                    } else {
+                      setFilterBy(value as IFilterType);
+                    }
+                  }}
                 >
                   <SelectTrigger
-                    className="w-[92px] focus-visible:border-none "
+                    className="w-fit focus-visible:border-none "
                     style={{
                       background: "#222222",
                       border: "none",
@@ -134,25 +154,82 @@ export default function Page() {
                     }}
                   >
                     <SelectValue
-                      placeholder="Rank"
+                      placeholder="Select Filter"
                       className="text-center font-dm-sans text-[14px] not-italic font-normal"
                     />
                   </SelectTrigger>
 
                   <SelectContent className="border-[#222222]">
-                    <SelectItem value=" ">All</SelectItem>
-                    <SelectItem value="water">Water</SelectItem>
-                    <SelectItem value="earth">Earth</SelectItem>
-                    <SelectItem value="air">Air</SelectItem>
-                    <SelectItem value="fire">Fire</SelectItem>
-                    <SelectItem value="metal">Metal</SelectItem>
-                    <SelectItem value="ice">Ice</SelectItem>
-                    <SelectItem value="lightning">Lightning</SelectItem>
-                    <SelectItem value="spirit">Spirit</SelectItem>
+                    <SelectItem value="all">All</SelectItem>
+                    <SelectItem value="rank">Rank</SelectItem>
+                    <SelectItem value="userType">User Type</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
+          </div>
+          <div className="flex justify-end gap-3">
+            {filterBy === "rank" ? (
+              <Select
+                value={rankFilter}
+                onValueChange={(value) =>
+                  handleRankFilter(value.trim() as IRankFilter)
+                }
+              >
+                <SelectTrigger
+                  className="w-fit focus-visible:border-none "
+                  style={{
+                    background: "#222222",
+                    border: "none",
+                    color: "#cccccccc",
+                  }}
+                >
+                  <SelectValue
+                    placeholder="Select Rank"
+                    className="text-center font-dm-sans text-[14px] not-italic font-normal"
+                  />
+                </SelectTrigger>
+
+                <SelectContent className="border-[#222222]">
+                  <SelectItem value=" ">All</SelectItem>
+                  <SelectItem value="water">Water</SelectItem>
+                  <SelectItem value="earth">Earth</SelectItem>
+                  <SelectItem value="air">Air</SelectItem>
+                  <SelectItem value="fire">Fire</SelectItem>
+                  <SelectItem value="metal">Metal</SelectItem>
+                  <SelectItem value="ice">Ice</SelectItem>
+                  <SelectItem value="lightning">Lightning</SelectItem>
+                  <SelectItem value="spirit">Spirit</SelectItem>
+                </SelectContent>
+              </Select>
+            ) : filterBy === "userType" ? (
+              <Select
+                value={rankFilter}
+                onValueChange={(value) =>
+                  setUserTypeFilter(value.trim() as IUserType)
+                }
+              >
+                <SelectTrigger
+                  className="w-fit focus-visible:border-none "
+                  style={{
+                    background: "#222222",
+                    border: "none",
+                    color: "#cccccccc",
+                  }}
+                >
+                  <SelectValue
+                    placeholder="Select User Type"
+                    className="text-center font-dm-sans text-[14px] not-italic font-normal"
+                  />
+                </SelectTrigger>
+
+                <SelectContent className="border-[#222222]">
+                  <SelectItem value=" ">All</SelectItem>
+                  <SelectItem value="ambassador">Ambassador</SelectItem>
+                  <SelectItem value="regular">Regular</SelectItem>
+                </SelectContent>
+              </Select>
+            ) : null}
           </div>
         </CardHeader>
 
@@ -175,7 +252,6 @@ export default function Page() {
                       <TableHead className="text-[#ffffff66] font-dm-sans text-[14px] not-italic font-[var(--Regular,400)]">
                         Total Points
                       </TableHead>
-                      {/* <TableHead className="text-[#ffffff66] font-dm-sans text-[14px] not-italic font-[var(--Regular,400)]">Completed Tasks</TableHead> */}
                       <TableHead className="text-[#ffffff66] font-dm-sans text-[14px] not-italic font-[var(--Regular,400)]">
                         Current Rank
                       </TableHead>
@@ -191,18 +267,20 @@ export default function Page() {
                         key={user?.id}
                         className="text-white border-[#232323] hover:bg-[#232323]/50 "
                       >
-                        {/* <TableCell className="font-medium">{user.rank}</TableCell> */}
                         <TableCell className="flex items-center gap-2">
                           <span>{index + 1}.</span>
                           <span>{" " + user?.name}</span>
                         </TableCell>
                         <TableCell>{user?.email}</TableCell>
-                        <TableCell>{user?.role}</TableCell>
+                        <TableCell className="capitalize">
+                          {user?.role}
+                        </TableCell>
                         <TableCell>
                           {user?.userPoint?.totalPoints || 0}
                         </TableCell>
-                        {/* <TableCell>{user.completedTasks}</TableCell> */}
-                        <TableCell>{user?.userPoint?.currentTier}</TableCell>
+                        <TableCell className="capitalize">
+                          {user?.userPoint?.currentRank}
+                        </TableCell>
                         <TableCell>
                           <Link href={`/user-management/${user?.id}`}>
                             <Badge className="border-transparent bg-[#2B2B2B] text-[#A2A2A2] [a&]:hover:bg-[#2B2B2B]/90">
@@ -221,7 +299,6 @@ export default function Page() {
                   onPageChange={setPage}
                   limit={limit}
                   onLimitChange={setLimit}
-                // limitOptions={[10, 20, 50, 100]}
                 />
               </>
             ) : (

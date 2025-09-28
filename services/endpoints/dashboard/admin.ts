@@ -47,6 +47,8 @@ export const adminCreateTask = async (payload: IAdminCreateTaskPayload): Promise
 
 // USER MANAGEMENT 
 export type IRankFilter = "water" | "earth" | "air" | "fire" | "metal" | "ice" | "lightning" | "spirit";
+export type IFilterType = 'all'|'userType'|'rank';
+export type IUserType = 'ambassador'|'regular';
 export const adminFetchUsers = async (page: number, limit: number, rank?: IRankFilter, search?: string): Promise<IAdminUsersResponse> => {
   const response = await get<IAdminUsersResponse>("/admin/profiles", { page, limit, rank, search });
   // console.log(response);
