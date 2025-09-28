@@ -142,7 +142,7 @@ export function SetupForm() {
             <div className="flex items-center gap-2 text-red-500 text-sm mb-2">
               <AlertCircle size={16} />
               <span>{errorFPJS.message}</span>
-              <button onClick={reloadData} className="underline">
+              <button onClick={reloadData} type="button" className="underline">
                 Try again
               </button>
             </div>

@@ -12,27 +12,12 @@ export const AuthService = {
   createAccount: async (
     payload: CreateAccountPayload
   ): Promise<AuthResponse> => {
-    const response = await post<AuthResponse>("/auth/create-account", payload);
+    const response = await post<AuthResponse>("/auth/admin/register", payload);
     return response;
   },
 
   login: async (payload: LoginPayload): Promise<LoginResponse> => {
-    const response = await post<LoginResponse>("/auth/login", payload);
-    return response;
-  },
-
-  requestOtp: async (email: string): Promise<OtpRequestResponse> => {
-    const response = await post<OtpRequestResponse>("/auth/request-otp", {
-      email,
-    });
-    return response;
-  },
-
-  verifyOtp: async (payload: {
-    email: string;
-    otp: string;
-  }): Promise<OtpVerifyResponse> => {
-    const response = await post<OtpVerifyResponse>("/auth/verify-otp", payload);
+    const response = await post<LoginResponse>("/auth/admin/login", payload);
     return response;
   },
 };

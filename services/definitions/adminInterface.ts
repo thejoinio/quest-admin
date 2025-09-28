@@ -17,7 +17,7 @@ export interface IAdminDashboardResData {
   totalUser: number;
   numberOfActiveUser: number;
   numberofInActiveUser: number;
-  numberOfKol: number;
+  numberOfAmbassador: number;
   totalPoint: number;
   weeklyTask: {
     id: string;
@@ -144,17 +144,13 @@ export interface IAdminUsersResponse {
     id: string;
     name: string;
     email: string;
-    // username: string,
-    // avatar: string,
-    // country: string,
     role: string;
-    isActive: boolean; // is_active
-    isBanned: boolean; // is_banned
-    // referralCode: string,
-    // referred_by_id: string
+    isActive: boolean;
+    isBanned: boolean;
+    deletedAt: string | null;
     userPoint: {
       totalPoints: number;
-      currentTier: string; // current_tier
+      currentRank: string;
     };
   }[];
   pagination: {
