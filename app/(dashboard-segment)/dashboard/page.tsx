@@ -100,7 +100,7 @@ export default function Page() {
             ) : createAdminDashboard ? (
               <p className="text-white [font-feature-settings:'liga'_off,'clig'_off] font-dm-sans text-[24px] not-italic font-semibold leading-[24px] tracking-[-0.2px]">
                 {/* 58 */}
-                {formatedNumber(createAdminDashboard.numberOfAmbassador) || 0}
+                {formatedNumber(createAdminDashboard.numberOfAmbassador || 0)}
               </p>
             ) : (
               <EmptyState />
