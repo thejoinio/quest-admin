@@ -204,7 +204,7 @@ export default function Page() {
               </Select>
             ) : filterBy === "userType" ? (
               <Select
-                value={rankFilter}
+                value={userTypeFilter}
                 onValueChange={(value) =>
                   setUserTypeFilter(value.trim() as IUserType)
                 }
