@@ -6,8 +6,8 @@ import QueryProvider from "./query-provider";
 import FingerprintProvider from "./fpjs-provider";
 
 export const metadata: Metadata = {
-  title: "Joinda Quest",
-  description: "Joinda Quest",
+  title: "Admin - Joinda Quest",
+  description: "Joinda Quest Admin Dashboard",
 };
 
 export default function RootLayout({

@@ -5,7 +5,7 @@ import { TError } from "@/types/errorType";
 import {
   adminCreateTask, adminFetchUserById, adminFetchUsers,
   adminFetchUserTaskHistoryById, adminUpdateUserPoint,
-  adminUserActions, adminUserEditRank, createKolUser,
+  adminUserActions, adminUserEditRank, createAmbassador, createKolUser,
   fetchAdminDashboard, fetchAdminDashboardOverviewLeaderboard,
   fetchAdminTaskManagement, IAdminUpdateUserPoints,
   IAdminUserActions, IAdminUserEditRank, IRankFilter, ITaskStatus
@@ -42,6 +42,24 @@ export const useCreateKolUser = () => {
       // You might want to show an error toast message here
 
       const message = error?.response?.data?.message || error?.message || "Failed to update profile, try again later.";
+      toast.error(message);
+    },
+  });
+};
+
+export const useCreateAmbassador = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<IResponse<any>, TError, ICreateUserPayload>({
+    mutationFn: createAmbassador,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ADMIN_AMBASSADOR] });
+      toast.success(data.message || "Account created successfully", { description: "The new ambassador account has been created." });
+
+    },
+    onError: (error: TError) => {
+      console.error("Failed to create ambassador:", error);
+      const message = error?.response?.data?.message || error?.message || "Failed to create ambassador, try again later.";
       toast.error(message);
     },
   });

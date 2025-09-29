@@ -11,6 +11,11 @@ export const createKolUser = async (payload: ICreateUserPayload): Promise<IRespo
   return response;
 };
 
+export const createAmbassador = async (payload: ICreateUserPayload): Promise<IResponse<any>> => {
+  const response = await post<IResponse<any>>("/admin/ambassador/create-account", payload);
+  return response;
+};
+
 
 // TASK MANAGEMENT 
 
