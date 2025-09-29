@@ -21,15 +21,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { X } from 'lucide-react';
 import Link from 'next/link';
-import { useCreateKolUser } from '@/services/hooks/useAdminHomeManagement';
+import { useCreateAmbassador } from '@/services/hooks/useAdminHomeManagement';
 
 const formSchema = z.object({
   fullName: z.string()
     .min(3, { message: "Please enter your full name." }),
-
   email: z.email({ message: "Please enter a valid email address" }),
-
-  // role: z.string().trim().nonempty("Role is required."),
 });
 
 export default function Page() {
@@ -39,17 +36,14 @@ export default function Page() {
     defaultValues: {
       fullName: "",
       email: "",
-      // role: "",
     },
   });
 
 
-  const { mutate: createKolUser, isPending } = useCreateKolUser();
+  const { mutate: createAmbassador, isPending } = useCreateAmbassador();
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // console.log(values);
-
-    createKolUser(
+    createAmbassador(
       {
         email: values.email,
         name: values.fullName,
@@ -113,21 +107,6 @@ export default function Page() {
               )}
             />
 
-            {/* Role */}
-            {/* <FormField
-              control={form.control}
-              name="role"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Role</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Ambassadors" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            /> */}
-
             <Button type="submit" size={"lg"} variant={"gradient"} className="w-full"
               disabled={isPending}
             >
@@ -135,7 +114,6 @@ export default function Page() {
             </Button>
           </form>
         </Form>
-
       </CardContent>
     </Card>
   )
