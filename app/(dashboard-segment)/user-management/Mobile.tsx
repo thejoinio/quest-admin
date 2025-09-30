@@ -126,11 +126,6 @@ export default function Mobile({
                 <SelectItem value="ice">Ice</SelectItem>
                 <SelectItem value="lightning">Lightning</SelectItem>
                 <SelectItem value="spirit">Spirit</SelectItem>
-
-                {/* <SelectItem value="rank">Rank</SelectItem>
-                <SelectItem value="email">Email</SelectItem>
-                <SelectItem value="name">Name</SelectItem>
-                <SelectItem value="type">User type</SelectItem> */}
               </SelectContent>
             </Select>
           </div>
@@ -203,7 +198,7 @@ export default function Mobile({
                           </p>
 
                           <h4 className="text-white text-[14px] font-normal">
-                            {user?.userPoint?.currentTier}
+                            {user?.userPoint?.currentRank}
                           </h4>
                         </div>
 
@@ -224,7 +219,7 @@ export default function Mobile({
                 onPageChange={setPage}
                 limit={limit}
                 onLimitChange={setLimit}
-              // limitOptions={[10, 20, 50, 100]}
+                // limitOptions={[10, 20, 50, 100]}
               />
             </>
           ) : (

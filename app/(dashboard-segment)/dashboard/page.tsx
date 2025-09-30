@@ -5,9 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import Link from "next/link";
-import TopUsers from "./TopUsers";
 import { useFetchAdminDashboard } from "@/services/hooks/useAdminHomeManagement";
-import { abbreviateNumber } from "@/lib/resources";
 import { EmptyState } from "@/components/empty";
 
 export default function Page() {
@@ -33,10 +31,6 @@ export default function Page() {
 
   const formatedNumber = (number: number, locales = "en-US", options = {}) => {
     return new Intl.NumberFormat(locales, options).format(number);
-  };
-  const calculatePercentage = (value: number, total: number) => {
-    if (total === 0) return 0; // avoid division by zero
-    return (value / total) * 100;
   };
 
   return (
