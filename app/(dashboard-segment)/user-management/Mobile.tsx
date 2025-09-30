@@ -198,7 +198,7 @@ export default function Mobile({
                           </p>
 
                           <h4 className="text-white text-[14px] font-normal">
-                            {user?.userPoint?.currentRank}
+                            {user?.userPoint?.currentRank || "N/A"}
                           </h4>
                         </div>
 
