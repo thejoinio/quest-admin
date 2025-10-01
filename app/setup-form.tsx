@@ -187,7 +187,7 @@ export function SetupForm() {
           type="submit"
           className="w-full"
           disabled={
-            isPending || (!DISABLE_SECURITY && isLoadingFPJS) || isGettingPK
+            isPending || (!DISABLE_SECURITY && isLoadingFPJS) || isGettingPK || loadingPasswordEncryptor
           }
           data-testid="login-button"
         >
