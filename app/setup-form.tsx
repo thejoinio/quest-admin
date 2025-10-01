@@ -97,7 +97,7 @@ export function SetupForm() {
       return;
     }
     try {
-      if (!encryptionKey?.data?.sessionId) {
+      if (!encryptionKey?.data?.sessionId || !encryptionKey?.data?.publicKey) {
         toast.error("Error activating security measures!", {
           description:
             "An error occurred while activating our security measures, try again later.",
