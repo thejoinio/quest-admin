@@ -22,6 +22,10 @@ import { useRouter } from "next/navigation";
 import { useVisitorData } from "@fingerprintjs/fingerprintjs-pro-react";
 import { toast } from "sonner";
 import { useLogin } from "@/services/hooks/useLogin";
+import {
+  useEncryptionPublicKey,
+  usePasswordEncryptor,
+} from "@/services/hooks/useEncryption";
 
 const formSchema = z.object({
   email: z.email({ message: "Please enter a valid email address" }),
@@ -37,7 +41,11 @@ const DISABLE_SECURITY =
 export function SetupForm() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-
+  const {
+    encryptPassword,
+    loading: loadingPasswordEncryptor,
+  } = usePasswordEncryptor();
+  const {data: encryptionKey, isPending: isGettingPK } = useEncryptionPublicKey();
   const {
     isLoading: isLoadingFPJS,
     error: errorFPJS,
@@ -76,18 +84,44 @@ export function SetupForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (loadingPasswordEncryptor) {
+      toast.info("Security measures is being activated...", {
+        description:
+          "Thanks for your patience while we activate our security measures.",
+      });
+      return;
+    }
     if (errorFPJS) {
       toast.error("Security check failed!", { description: errorFPJS.message });
       return;
     }
+    try {
+      if (!encryptionKey?.data?.sessionId) {
+        toast.error("Error activating security measures!", {
+          description:
+            "An error occurred while activating our security measures, try again later.",
+        });
+        return;
+      }
+      const encryptedPassword = await encryptPassword(
+        values.password,
+        encryptionKey.data.publicKey
+      );
     login({
       email: values.email,
-      password: values.password,
+      encryptedPassword: encryptedPassword,
+      sessionId: encryptionKey.data.sessionId,
       fingerprintData: DISABLE_SECURITY
         ? { visitorId: "test-visitor-id", requestId: "test-request-id" }
         : data,
     });
+    } catch (error) {
+      console.error("Login failed:", error);
+      toast.error("An unexpected error occurred while logging you in.", {
+        description: "Please try again later.",
+      });
+    }
   }
 
   return (
@@ -153,11 +187,11 @@ export function SetupForm() {
           type="submit"
           className="w-full"
           disabled={
-            isPending || (!DISABLE_SECURITY && isLoadingFPJS)
+            isPending || (!DISABLE_SECURITY && isLoadingFPJS) || isGettingPK
           }
           data-testid="login-button"
         >
-          {!DISABLE_SECURITY && isLoadingFPJS
+          {!DISABLE_SECURITY && isLoadingFPJS || isGettingPK || loadingPasswordEncryptor
             ? "Running security checks..."
             : isPending
               ? "Logging in..."
