@@ -17,7 +17,8 @@ export interface AuthResponse {
 //Login
 export interface LoginPayload {
   email: string;
-  password: string;
+  encryptedPassword: string;
+  sessionId: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   fingerprintData?: any // fingerprint_data
 }
