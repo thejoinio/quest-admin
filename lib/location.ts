@@ -21,10 +21,14 @@ export async function getCountries() {
     }
 }
 
-export function getCountryNameByCca2(code: string, countries = restCountries): string | null {
-    const match = countries.find(
-        (country) => country.cca2.toUpperCase() === code.toUpperCase()
-    );
+export function getCountryNameByCca2(
+  code: string,
+  countries = restCountries
+): string | null {
+  const match = countries.find(
+    (country) =>
+      country.cca2 && code && country.cca2.toUpperCase() === code.toUpperCase()
+  );
 
-    return match ? match.name.common : null;
+  return match ? match.name.common : null;
 }

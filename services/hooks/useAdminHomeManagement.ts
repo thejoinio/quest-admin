@@ -26,6 +26,7 @@ import {
 export const useCreateKolUser = () => {
   const queryClient = useQueryClient();
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return useMutation<IResponse<any>, TError, ICreateUserPayload>({
     mutationFn: createKolUser,
     onSuccess: (data) => {
@@ -50,6 +51,7 @@ export const useCreateKolUser = () => {
 export const useCreateAmbassador = () => {
   const queryClient = useQueryClient();
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return useMutation<IResponse<any>, TError, ICreateUserPayload>({
     mutationFn: createAmbassador,
     onSuccess: (data) => {

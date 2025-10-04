@@ -2,6 +2,8 @@ export interface ICreateUserPayload {
   name: string;
   email: string;
   role: string;
+  username: string;
+  country: string;
 }
 
 export interface IResponse<T> {
