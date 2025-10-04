@@ -53,7 +53,9 @@ export default function Page() {
       {
         email: values.email,
         name: values.fullName,
-        role: "kol"
+        role: "kol",
+        country: "",
+        username: ""
       },
       {
         onSuccess: () => {
