@@ -162,7 +162,7 @@ export default function Mobile({
                       </AccordionPrimitive.Header>
 
                       <div className="place-self-center justify-self-end">
-                        <Link href="/user-management/user-profile">
+                        <Link href={`/user-management/${user?.id}`}>
                           <Badge className="border-transparent bg-[#2B2B2B] text-white [a&]:hover:bg-[#2B2B2B]/90 p-2">
                             View Profile
                           </Badge>

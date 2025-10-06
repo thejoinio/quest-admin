@@ -25,6 +25,7 @@ interface _props {
 }
 
 export default function MobileTaskHistory({ tasks, page, setPage, limit, setLimit }: _props) {
+console.log("🚀 ~ MobileTaskHistory ~ tasks:", tasks)
 
 
   return (
