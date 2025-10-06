@@ -24,6 +24,7 @@ interface _props {
 
 export default function TaskHistory({ id }: _props) {
   const isLarge = useIsLargeScreen();
+  console.log("🚀 ~ TaskHistory ~ isLarge:", isLarge)
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const { data: userTasksHistory } = useAdminFetchUserTaskHistoryById(id, page, limit);
