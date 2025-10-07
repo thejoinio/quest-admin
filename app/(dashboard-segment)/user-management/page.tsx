@@ -6,7 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
   TableBody,
-  // TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -91,6 +90,13 @@ export default function Page() {
         statusFilter={rankFilter}
         handleStatusFilter={handleRankFilter}
         handleSearch={handleSearch}
+        rankFilter={rankFilter}
+        setRankFilter={setRankFilter}
+        userTypeFilter={userTypeFilter}
+        setUserTypeFilter={setUserTypeFilter}
+        filterBy={filterBy}
+        setFilterBy={setFilterBy}
+        handleRankFilter={handleRankFilter}
       />
     );
   }
@@ -103,7 +109,7 @@ export default function Page() {
 
       <Card className="bg-[#171717] text-white border-none shadow-lg min-w-[250px] p-[40px 32px] mx-auto">
         <CardHeader className="border-b border-[#2D2D2D]">
-          <CardTitle className="text-lg mb-3">User list</CardTitle>
+          <CardTitle className="text-lg mb-3">Users list</CardTitle>
 
           <div className="flex justify-between items-center">
             <form onSubmit={handleSearch}>
@@ -302,7 +308,7 @@ export default function Page() {
                 />
               </>
             ) : (
-              <EmptyState title="No user found." />
+              <EmptyState title="No user available yet." />
             )
           ) : (
             <div className="flex items-center justify-center">

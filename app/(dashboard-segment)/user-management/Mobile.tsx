@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 
 import Link from "next/link";
 import { CardTitle } from "@/components/ui/card";
@@ -22,7 +22,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { IAdminUsersResponse } from "@/services/definitions/adminInterface";
-import { IRankFilter } from "@/services/endpoints/dashboard/admin";
+import {
+  IFilterType,
+  IRankFilter,
+  IUserType,
+} from "@/services/endpoints/dashboard/admin";
 import { EmptyState } from "@/components/empty";
 import { PaginationComponent } from "@/components/PaginationComponent";
 import { Spinner } from "@/components/preloader";
@@ -44,6 +48,13 @@ interface _props {
 
   handleStatusFilter: (status: IRankFilter) => void;
   handleSearch: (e: React.FormEvent<Element>) => void;
+  rankFilter: IRankFilter | undefined;
+  setRankFilter: Dispatch<React.SetStateAction<IRankFilter | undefined>>;
+  userTypeFilter: IUserType | undefined;
+  setUserTypeFilter: Dispatch<SetStateAction<IUserType | undefined>>;
+  filterBy: IFilterType;
+  setFilterBy: Dispatch<SetStateAction<IFilterType>>;
+  handleRankFilter: (rank: IRankFilter) => void;
 }
 
 export default function Mobile({
@@ -55,9 +66,14 @@ export default function Mobile({
   setPage,
   limit,
   setLimit,
-  statusFilter,
-  handleStatusFilter,
   handleSearch,
+  rankFilter,
+  setRankFilter,
+  userTypeFilter,
+  setUserTypeFilter,
+  filterBy,
+  setFilterBy,
+  handleRankFilter,
 }: _props) {
   return (
     <section className="min-h-[80dvh]">
@@ -65,69 +81,135 @@ export default function Mobile({
         <CardTitle className="text-lg">User Management</CardTitle>
       </div>
 
-      <div className="space-y-5">
-        <CardTitle className="text-lg">User List</CardTitle>
+      <div className="space-y-3 sm:space-y-5">
+        <CardTitle className="text-lg">Users List</CardTitle>
 
-        <div className="flex justify-between items-end ">
-          <form onSubmit={handleSearch}>
-            <div className="relative bg-[#171717] max-w-[240px] rounded-[8px]">
-              <button
-                type="button"
-                className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                tabIndex={-1}
-              >
-                <Search size={18} />
-              </button>
+        <div className="flex flex-col justify-between gap-2">
+          <div className="flex">
+            <form onSubmit={handleSearch}>
+              <div className="relative bg-[#171717] rounded-[8px]">
+                <button
+                  type="button"
+                  className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  tabIndex={-1}
+                >
+                  <Search size={18} />
+                </button>
 
-              <Input
-                type="search"
-                placeholder="Search. . ."
-                name="search"
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                className="pl-10 border-[#222224] bg-[#222222] focus-visible:border-[#222224] h-[43px]"
-              />
-            </div>
-          </form>
+                <Input
+                  type="search"
+                  placeholder="Search. . ."
+                  name="search"
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  className="pl-10 border-[#222224] bg-[#222222] focus-visible:border-[#222224] h-[43px]"
+                />
+              </div>
+            </form>
+          </div>
 
-          <div className="space-y-1">
-            <p className="text-[#cccccccc] font-dm-sans text-[14px] not-italic font-normal ">
-              Filter
-            </p>
+          <div className="flex justify-between">
+            <div className="flex items-center gap-2">
+              <p className="text-[#cccccccc] font-dm-sans text-[14px] not-italic font-normal ">
+                Filter
+              </p>
 
-            <Select
-              value={statusFilter}
-              onValueChange={(value) =>
-                handleStatusFilter(value.trim() as IRankFilter)
-              }
-            >
-              <SelectTrigger
-                className="w-[92px] focus-visible:border-none rounded-[8px]"
-                style={{
-                  background: "#171717",
-                  border: "none",
-                  color: "#cccccccc",
-                  height: "43px",
+              <Select
+                value={filterBy}
+                onValueChange={(value) => {
+                  if (value === "all") {
+                    setRankFilter(undefined);
+                    setUserTypeFilter(undefined);
+                    setFilterBy("all");
+                  } else {
+                    setFilterBy(value as IFilterType);
+                  }
                 }}
               >
-                <SelectValue
-                  placeholder="Select"
-                  className="text-center font-dm-sans text-[14px] not-italic font-normal"
-                />
-              </SelectTrigger>
+                <SelectTrigger
+                  className="w-fit focus-visible:border-none "
+                  style={{
+                    background: "#171717",
+                    border: "none",
+                    color: "#cccccccc",
+                  }}
+                >
+                  <SelectValue
+                    placeholder="Select Filter"
+                    className="text-center bg-[#171717] font-dm-sans text-[14px] not-italic font-normal"
+                  />
+                </SelectTrigger>
 
-              <SelectContent className="border-[#171717]">
-                <SelectItem value=" ">All</SelectItem>
-                <SelectItem value="water">Water</SelectItem>
-                <SelectItem value="earth">Earth</SelectItem>
-                <SelectItem value="air">Air</SelectItem>
-                <SelectItem value="fire">Fire</SelectItem>
-                <SelectItem value="metal">Metal</SelectItem>
-                <SelectItem value="ice">Ice</SelectItem>
-                <SelectItem value="lightning">Lightning</SelectItem>
-                <SelectItem value="spirit">Spirit</SelectItem>
-              </SelectContent>
-            </Select>
+                <SelectContent className="border-[#222222]">
+                  <SelectItem value="all">All</SelectItem>
+                  <SelectItem value="rank">Rank</SelectItem>
+                  <SelectItem value="userType">User Type</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex justify-end gap-3">
+              {filterBy === "rank" ? (
+                <Select
+                  value={rankFilter}
+                  onValueChange={(value) =>
+                    handleRankFilter(value.trim() as IRankFilter)
+                  }
+                >
+                  <SelectTrigger
+                    className="w-fit focus-visible:border-none "
+                    style={{
+                      background: "#171717",
+                      border: "none",
+                      color: "#cccccccc",
+                    }}
+                  >
+                    <SelectValue
+                      placeholder="Select Rank"
+                      className="text-center bg-[#171717] font-dm-sans text-[14px] not-italic font-normal"
+                    />
+                  </SelectTrigger>
+
+                  <SelectContent className="border-[#222222]">
+                    <SelectItem value=" ">All</SelectItem>
+                    <SelectItem value="water">Water</SelectItem>
+                    <SelectItem value="earth">Earth</SelectItem>
+                    <SelectItem value="air">Air</SelectItem>
+                    <SelectItem value="fire">Fire</SelectItem>
+                    <SelectItem value="metal">Metal</SelectItem>
+                    <SelectItem value="ice">Ice</SelectItem>
+                    <SelectItem value="lightning">Lightning</SelectItem>
+                    <SelectItem value="spirit">Spirit</SelectItem>
+                  </SelectContent>
+                </Select>
+              ) : filterBy === "userType" ? (
+                <Select
+                  value={userTypeFilter}
+                  onValueChange={(value) =>
+                    setUserTypeFilter(value.trim() as IUserType)
+                  }
+                >
+                  <SelectTrigger
+                    className="w-fit focus-visible:border-none "
+                    style={{
+                      background: "#222222",
+                      border: "none",
+                      color: "#cccccccc",
+                    }}
+                  >
+                    <SelectValue
+                      placeholder="Select User Type"
+                      className="text-center bg-[#171717] font-dm-sans text-[14px] not-italic font-normal"
+                    />
+                  </SelectTrigger>
+
+                  <SelectContent className="border-[#222222]">
+                    <SelectItem value=" ">All</SelectItem>
+                    <SelectItem value="ambassador">Ambassador</SelectItem>
+                    <SelectItem value="regular">Regular</SelectItem>
+                  </SelectContent>
+                </Select>
+              ) : null}
+            </div>
           </div>
         </div>
 

@@ -26,7 +26,7 @@ export default function EditRank({ usersData, user_id }: _props) {
       <h3>Edit Rank</h3>
 
       <Select // defaultValue={usersData?.data?.userPoint?.current_tier}
-        value={`${usersData?.data?.userPoint?.currentTier}`.trim().toLowerCase()}
+        value={`${usersData?.data?.userPoint?.currentRank}`.trim().toLowerCase()}
         onValueChange={(value) => {
           editUserRank({ user_id, payload: { rank: value.trim() } });
 

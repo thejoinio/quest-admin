@@ -7,6 +7,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import Link from "next/link";
 import { useFetchAdminDashboard } from "@/services/hooks/useAdminHomeManagement";
 import { EmptyState } from "@/components/empty";
+import TopUsers from "./TopUsers";
 
 export default function Page() {
   const { data: createAdminDashboard, isPending } = useFetchAdminDashboard();
@@ -55,30 +56,29 @@ export default function Page() {
           <div>
             {isPending ? (
               loadingView
-            ) : createAdminDashboard ? (
-              <p className="text-white ...">
-                {formatedNumber(createAdminDashboard.totalUser)}
-              </p>
             ) : (
-              <EmptyState />
+              <p className="text-white [font-feature-settings:'liga'_off,'clig'_off] font-dm-sans text-[24px] not-italic font-semibold leading-[24px] tracking-[-0.2px]">
+                {formatedNumber(createAdminDashboard?.totalUser || 0)}
+              </p>
             )}
           </div>
 
           <div>
             {isPending ? (
               loadingView
-            ) : createAdminDashboard ? (
+            ) : (
               <p className="mt-[16px] text-[var(--Grey-grey-600,#898989)] [font-feature-settings:'liga'_off,'clig'_off] font-dm-sans text-[12px] not-italic font-normal leading-[24px] tracking-[-0.2px]">
-                {/* 10,800 Active / 1,650 Inactive */}
                 {`${
-                  formatedNumber(createAdminDashboard.numberOfActiveUser) +
+                  formatedNumber(
+                    createAdminDashboard?.numberOfActiveUser || 0
+                  ) +
                   " Active / " +
-                  formatedNumber(createAdminDashboard.numberofInActiveUser) +
+                  formatedNumber(
+                    createAdminDashboard?.numberofInActiveUser || 0
+                  ) +
                   " Inactive"
                 }`}
               </p>
-            ) : (
-              <EmptyState />
             )}
           </div>
         </div>
@@ -91,13 +91,10 @@ export default function Page() {
           <div>
             {isPending ? (
               loadingView
-            ) : createAdminDashboard ? (
-              <p className="text-white [font-feature-settings:'liga'_off,'clig'_off] font-dm-sans text-[24px] not-italic font-semibold leading-[24px] tracking-[-0.2px]">
-                {/* 58 */}
-                {formatedNumber(createAdminDashboard.numberOfAmbassador || 0)}
-              </p>
             ) : (
-              <EmptyState />
+              <p className="text-white [font-feature-settings:'liga'_off,'clig'_off] font-dm-sans text-[24px] not-italic font-semibold leading-[24px] tracking-[-0.2px]">
+                {formatedNumber(createAdminDashboard?.numberOfAmbassador || 0)}
+              </p>
             )}
           </div>
           <p className="mt-[16px] text-[var(--Grey-grey-600,#898989)] [font-feature-settings:'liga'_off,'clig'_off] font-dm-sans text-[12px] not-italic font-normal leading-[24px] tracking-[-0.2px]">
@@ -113,18 +110,50 @@ export default function Page() {
           <div>
             {isPending ? (
               loadingView
-            ) : createAdminDashboard ? (
-              <p className="text-white [font-feature-settings:'liga'_off,'clig'_off] font-dm-sans text-[24px] not-italic font-semibold leading-[24px] tracking-[-0.2px]">
-                {/* 22,256 */}
-                {formatedNumber(createAdminDashboard.totalPoint)}
-              </p>
             ) : (
-              <EmptyState />
+              <p className="text-white [font-feature-settings:'liga'_off,'clig'_off] font-dm-sans text-[24px] not-italic font-semibold leading-[24px] tracking-[-0.2px]">
+                {formatedNumber(createAdminDashboard?.totalPoint || 0)}
+              </p>
             )}
           </div>
           <p className="mt-[16px] text-[var(--Grey-grey-600,#898989)] [font-feature-settings:'liga'_off,'clig'_off] font-dm-sans text-[12px] not-italic font-normal leading-[24px] tracking-[-0.2px]">
             {" "}
           </p>
+        </div>
+
+        <div className="rounded-[12px] bg-[#171717] p-6 flex-1 min-w-[250px]">
+          <p className="text-[rgba(255,255,255,0.98)] [font-feature-settings:'liga'_off,'clig'_off] font-dm-sans text-[14px] not-italic font-normal leading-[24px] tracking-[-0.2px]">
+            Users Engagement
+          </p>
+
+          <div>
+            {isPending ? (
+              loadingView
+            ) : (
+              <p className="text-white [font-feature-settings:'liga'_off,'clig'_off] font-dm-sans text-[24px] not-italic font-semibold leading-[24px] tracking-[-0.2px]">
+                {`${
+                  formatedNumber(
+                    createAdminDashboard?.numberOfMonthlyActiveUsers || 0
+                  ) +
+                  " MAU / " +
+                  formatedNumber(
+                    createAdminDashboard?.numberOfDailyActiveUsers || 0
+                  ) +
+                  " DAU"
+                }`}
+              </p>
+            )}
+          </div>
+
+          <div>
+            {isPending ? (
+              loadingView
+            ) : (
+              <p className="mt-[16px] text-[var(--Grey-grey-600,#898989)] [font-feature-settings:'liga'_off,'clig'_off] font-dm-sans text-[12px] not-italic font-normal leading-[24px] tracking-[-0.2px]">
+                Monthly Active Users (MAU) / Daily Active Users (DAU)
+              </p>
+            )}
+          </div>
         </div>
       </section>
 
@@ -162,26 +191,28 @@ export default function Page() {
 
             <div className="space-y-3 text-sm">
               {isPending ? (
-              loadingView
-            ) : createAdminDashboard
-                ? transformWeekStat(createAdminDashboard.allWeekStat).map(
-                    (item, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center justify-between gap-4"
-                      >
-                        <div className="flex items-center gap-2">
-                          <span
-                            className="block w-2.5 h-2.5 rounded-full"
-                            style={{ backgroundColor: item.color }}
-                          />
-                          {item.name}
-                        </div>
-                        <span>{item.value}%</span>
+                loadingView
+              ) : createAdminDashboard ? (
+                transformWeekStat(createAdminDashboard.allWeekStat).map(
+                  (item, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between gap-4"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span
+                          className="block w-2.5 h-2.5 rounded-full"
+                          style={{ backgroundColor: item.color }}
+                        />
+                        {item.name}
                       </div>
-                    )
+                      <span>{item.value}%</span>
+                    </div>
                   )
-                : <EmptyState />}
+                )
+              ) : (
+                <EmptyState />
+              )}
             </div>
           </CardContent>
         </Card>
@@ -239,7 +270,7 @@ export default function Page() {
         </div>
       </section>
 
-      <section className="hidden rounded-[12px] bg-[#171717] text-white overflow-hidden flex-wrap my-5">
+      <section className="flex rounded-[12px] bg-[#171717] text-white overflow-hidden flex-wrap my-5">
         <Card className="bg-[#171717] border-none">
           <CardHeader className="flex justify-between items-center">
             <CardTitle className="text-white font-dm-sans text-[18px] not-italic font-semibold">
@@ -253,7 +284,7 @@ export default function Page() {
             <div className="text-white"> </div>
           </CardHeader>
           <CardContent>
-            {/* <TopUsers /> */}
+            <TopUsers />
           </CardContent>
         </Card>
       </section>

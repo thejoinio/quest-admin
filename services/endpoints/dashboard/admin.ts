@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { get, patch, post } from "@/services/axios";
 import {
   ICreateUserPayload, IResponse, IAdminTaskManagementResponse, IAdminCreateTaskPayload,
