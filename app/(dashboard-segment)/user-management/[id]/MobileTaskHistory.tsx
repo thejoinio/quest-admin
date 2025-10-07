@@ -25,8 +25,6 @@ interface _props {
 }
 
 export default function MobileTaskHistory({ tasks, page, setPage, limit, setLimit }: _props) {
-console.log("🚀 ~ MobileTaskHistory ~ tasks:", tasks)
-
 
   return (
     <div>
@@ -51,7 +49,6 @@ console.log("🚀 ~ MobileTaskHistory ~ tasks:", tasks)
                         data-slot="accordion-trigger"
                         className={cn(
                           "focus-visible:border-ring focus-visible:ring-ring/50 flex flex-1 items-center justify-between gap-4 rounded-md text-left text-sm font-medium transition-all outline-none focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 [&[data-state=open]>svg]:rotate-180",
-                          // "p-[10px] bg-[#171717] rounded-[8px] my-2 cursor-pointer text-white"
                         )}
                       >
                         <div className='p-[10px] bg-[#171717] rounded-[8px] text-white'>
@@ -59,36 +56,18 @@ console.log("🚀 ~ MobileTaskHistory ~ tasks:", tasks)
 
                           <h4 className='text-white text-[14px] font-normal'>{task?.completedAt}</h4>
                         </div>
-
-                        {/* <ChevronDownIcon className="pointer-events-none size-4 shrink-0 translate-y-0.5 transition-transform duration-200" /> */}
                       </AccordionPrimitive.Trigger>
                     </AccordionPrimitive.Header>
 
                     <div className='place-self-center justify-self-end'>
                       <Badge
                         variant={task?.status == "Complete" ? "success" : "in-progress"}
-                      // className="border-transparent bg-[#2B2B2B] text-white [a&]:hover:bg-[#2B2B2B]/90 p-2"
                       >
                         {task?.status}
                       </Badge>
                     </div>
                   </div>
 
-                  {/* <AccordionContent>
-                  <div className='grid grid-cols-2 gap-3'>
-                    <div className='p-[10px] bg-[#171717] rounded-[8px]'>
-                      <p className='text-[#ffffff7a] text-[14px] font-normal'>Task Count</p>
-
-                      <h4 className='text-white text-[14px] font-normal'>{task.taskCount}</h4>
-                    </div>
-
-                    <div className='p-[10px] bg-[#171717] rounded-[8px]'>
-                      <p className='text-[#ffffff7a] text-[14px] font-normal'>Points</p>
-
-                      <h4 className='text-white text-[14px] font-normal'>{task.points}</h4>
-                    </div>
-                  </div>
-                </AccordionContent> */}
                 </AccordionItem>
               ))
             }
@@ -101,10 +80,9 @@ console.log("🚀 ~ MobileTaskHistory ~ tasks:", tasks)
             onPageChange={setPage}
             limit={limit}
             onLimitChange={setLimit}
-          // limitOptions={[10, 20, 50, 100]}
           />
         </>
-        : <EmptyState title='No tasks found.' />
+        : <EmptyState title='No tasks at the moment.' />
         : <div className='flex items-center justify-center'>
           <Spinner size={64} />
         </div>

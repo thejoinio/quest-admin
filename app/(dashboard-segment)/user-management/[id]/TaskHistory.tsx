@@ -24,7 +24,6 @@ interface _props {
 
 export default function TaskHistory({ id }: _props) {
   const isLarge = useIsLargeScreen();
-  console.log("🚀 ~ TaskHistory ~ isLarge:", isLarge)
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const { data: userTasksHistory } = useAdminFetchUserTaskHistoryById(id, page, limit);
@@ -75,10 +74,9 @@ export default function TaskHistory({ id }: _props) {
             onPageChange={setPage}
             limit={limit}
             onLimitChange={setLimit}
-          // limitOptions={[10, 20, 50, 100]}
           />
         </>
-        : <EmptyState title="No tasks found" />
+        : <EmptyState title="No tasks available at the moment" />
         : <div className='flex items-center justify-center'>
           <Spinner size={64} />
         </div>

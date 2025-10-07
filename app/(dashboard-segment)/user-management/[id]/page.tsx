@@ -1,7 +1,6 @@
 "use client";
 
 import React, { use } from "react";
-// import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -19,7 +18,6 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const loadingView = (
     <div className="animate-pulse space-y-3">
       <div className="h-4 bg-[#2b2b2b] rounded w-1/2"></div>
-      {/* <div className="h-3 bg-muted rounded w-3/4"></div> */}
     </div>
   );
 
@@ -75,9 +73,9 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                   </small>
                 </h3>
 
-                <div className="bg-[#FCE085] rounded-[8px] px-[10px] py-[5px] text-center w-fit">
-                  <p className="text-[#E0A326] p-0 m-0 ">
-                    {usersData?.data?.userPoint?.currentTier}
+                <div className="bg-[#FCE08550] rounded-[8px] px-[10px] py-[5px] text-center w-fit">
+                  <p className="text-[#E0A326] p-0 m-0 capitalize">
+                    {usersData?.data?.userPoint?.currentRank}
                   </p>
                 </div>
 
@@ -100,7 +98,6 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                 </section>
 
                 <section className="space-y-2 center text-center border border-[#3B3939] rounded-[8px] py-[14px] px-[9px]">
-                  {/* <h2 className='text-white text-center font-dm-sans text-[24px]'>5000</h2> */}
                   <h2 className="text-white text-center font-dm-sans text-[24px]">
                     {usersData
                       ? usersData.data?.userPoint?.totalPoints || 0
@@ -113,7 +110,6 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                 </section>
 
                 <section className="space-y-2 center text-center border border-[#3B3939] rounded-[8px] py-[14px] px-[9px]">
-                  {/* <h2 className='text-white text-center font-dm-sans text-[24px]'>11/07/2025</h2> */}
                   <h2 className="text-white text-center font-dm-sans text-[24px]">
                     {usersData
                       ? formatDate(usersData.data?.createdAt)
@@ -126,10 +122,9 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                 </section>
 
                 <section className="space-y-2 center text-center border border-[#3B3939] rounded-[8px] py-[14px] px-[9px]">
-                  {/* <h2 className='text-white text-center font-dm-sans text-[24px]'>Earth</h2> */}
-                  <h2 className="text-white text-center font-dm-sans text-[24px]">
+                  <h2 className="text-white text-center font-dm-sans text-[24px] capitalize">
                     {usersData
-                      ? usersData?.data?.userPoint?.currentTier
+                      ? usersData?.data?.userPoint?.currentRank
                       : loadingView}
                   </h2>
 
@@ -142,7 +137,6 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
             <section className="col-span-1 md:col-span-2 lg:col-span-2 bg-[#1E1E1E] rounded-[12px] py-[25px] px-[15px]">
               <CardTitle className="text-lg mb-3">Task History</CardTitle>
-              {/* <TaskHistory userTasks={usersData?.data?.userTasks} /> */}
               <TaskHistory id={id} />
             </section>
 

@@ -26,7 +26,7 @@ export default function Header() {
     router.push("/");
   };
   return (
-    <header className="bg-[#171717] h-[100px] flex items-center justify-between p-5">
+    <header className="bg-[#171717] h-[100px] flex items-center justify-between p-5 gap-2">
       <Link href={"/dashboard"}>
         <Image
           src={"/logo.png"}
@@ -36,7 +36,7 @@ export default function Header() {
           className="h-8 w-auto"
         />
       </Link>
-      <form>
+      <form className="hidden sm:flex">
         <div className="relative bg-[#222222] max-w-[240px] rounded-[8px]">
           <button
             type="button"

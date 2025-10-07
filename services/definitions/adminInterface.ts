@@ -30,6 +30,8 @@ export interface IAdminDashboardResData {
     week: number;
     percentage: number;
   }[];
+  numberOfDailyActiveUsers: number;
+  numberOfMonthlyActiveUsers: number;
 }
 
 interface IOverviewLeaderboard {
@@ -99,7 +101,8 @@ export type IAdminCreateTaskPayload = {
   description: string;
   pointsReward: number; // points_reward
   type: string;
-  proofTypeRequirement: { // proof_type_requirement
+  proofTypeRequirement: {
+    // proof_type_requirement
     link: boolean;
     image: boolean;
   };
@@ -122,7 +125,8 @@ export interface IAdminCreateTaskResData {
   description: string;
   pointsReward: number; // points_reward
   type: string;
-  proofType: { // proof_type
+  proofType: {
+    // proof_type
     link: string;
   };
   metadata: {
@@ -185,17 +189,16 @@ export interface IAdminSingleUserResponse {
   avatar: string;
   country: string;
   role: string;
-  isActive: boolean; // is_active
-  isBanned: boolean; // is_banned
+  isActive: boolean;
+  isBanned: boolean;
   referralCode: string;
-  referredById: string | null; // referred_by_id
-
+  referredById: string | null;
   createdAt: string;
   completedTasksCount: string | number;
   userTasks: IAdminSingleUserTasksResponse[];
   userPoint: {
     totalPoints: number;
-    currentTier: string; // current_tier
+    currentRank: string;
   };
 }
 
