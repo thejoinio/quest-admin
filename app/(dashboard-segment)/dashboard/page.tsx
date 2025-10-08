@@ -134,12 +134,7 @@ export default function Page() {
                 {`${
                   formatedNumber(
                     createAdminDashboard?.numberOfMonthlyActiveUsers || 0
-                  ) +
-                  " MAU / " +
-                  formatedNumber(
-                    createAdminDashboard?.numberOfDailyActiveUsers || 0
-                  ) +
-                  " DAU"
+                  ) + " MAU"
                 }`}
               </p>
             )}
@@ -150,7 +145,36 @@ export default function Page() {
               loadingView
             ) : (
               <p className="mt-[16px] text-[var(--Grey-grey-600,#898989)] [font-feature-settings:'liga'_off,'clig'_off] font-dm-sans text-[12px] not-italic font-normal leading-[24px] tracking-[-0.2px]">
-                Monthly Active Users (MAU) / Daily Active Users (DAU)
+                Monthly Active Users (MAU)
+              </p>
+            )}
+          </div>
+        </div>
+        <div className="rounded-[12px] bg-[#171717] p-6 flex-1 min-w-[250px]">
+          <p className="text-[rgba(255,255,255,0.98)] [font-feature-settings:'liga'_off,'clig'_off] font-dm-sans text-[14px] not-italic font-normal leading-[24px] tracking-[-0.2px]">
+            Users Engagement
+          </p>
+
+          <div>
+            {isPending ? (
+              loadingView
+            ) : (
+              <p className="text-white [font-feature-settings:'liga'_off,'clig'_off] font-dm-sans text-[24px] not-italic font-semibold leading-[24px] tracking-[-0.2px]">
+                {`${
+                  formatedNumber(
+                    createAdminDashboard?.numberOfDailyActiveUsers || 0
+                  ) + " DAU"
+                }`}
+              </p>
+            )}
+          </div>
+
+          <div>
+            {isPending ? (
+              loadingView
+            ) : (
+              <p className="mt-[16px] text-[var(--Grey-grey-600,#898989)] [font-feature-settings:'liga'_off,'clig'_off] font-dm-sans text-[12px] not-italic font-normal leading-[24px] tracking-[-0.2px]">
+                Daily Active Users (DAU)
               </p>
             )}
           </div>
@@ -163,56 +187,69 @@ export default function Page() {
             <CardTitle className="text-lg">Task Participation</CardTitle>
           </CardHeader>
           <CardContent className="flex items-center justify-between">
-            <div className="w-40 h-40">
-              <ResponsiveContainer>
-                <PieChart>
-                  {isPending ? (
-                    loadingView
-                  ) : createAdminDashboard ? (
-                    <Pie
-                      data={transformWeekStat(createAdminDashboard.allWeekStat)}
-                      innerRadius="60%"
-                      outerRadius="100%"
-                      dataKey="value"
-                      paddingAngle={3}
-                    >
-                      {transformWeekStat(createAdminDashboard.allWeekStat).map(
-                        (entry, index) => (
+            {(!isPending && !createAdminDashboard?.allWeekStat?.length) ||
+            createAdminDashboard?.allWeekStat.every(
+              (stat) => stat.percentage === 0
+            ) ? (
+              <EmptyState title="" />
+            ) : null}
+            {(!isPending && createAdminDashboard?.allWeekStat?.length) ||
+            createAdminDashboard?.allWeekStat.every(
+              (stat) => stat.percentage > 0
+            ) ? (
+              <div className="w-40 h-40">
+                <ResponsiveContainer>
+                  <PieChart>
+                    {isPending ? (
+                      loadingView
+                    ) : (
+                      <Pie
+                        data={transformWeekStat(
+                          createAdminDashboard?.allWeekStat || [
+                            { week: 0, percentage: 0 },
+                          ]
+                        )}
+                        innerRadius="60%"
+                        outerRadius="100%"
+                        dataKey="value"
+                        paddingAngle={3}
+                      >
+                        {transformWeekStat(
+                          createAdminDashboard?.allWeekStat || [
+                            { week: 0, percentage: 0 },
+                          ]
+                        ).map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={entry.color} />
-                        )
-                      )}
-                    </Pie>
-                  ) : (
-                    <EmptyState />
-                  )}
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
+                        ))}
+                      </Pie>
+                    )}
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            ) : null}
 
             <div className="space-y-3 text-sm">
-              {isPending ? (
-                loadingView
-              ) : createAdminDashboard ? (
-                transformWeekStat(createAdminDashboard.allWeekStat).map(
-                  (item, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between gap-4"
-                    >
-                      <div className="flex items-center gap-2">
-                        <span
-                          className="block w-2.5 h-2.5 rounded-full"
-                          style={{ backgroundColor: item.color }}
-                        />
-                        {item.name}
+              {isPending
+                ? loadingView
+                : createAdminDashboard
+                ? transformWeekStat(createAdminDashboard.allWeekStat).map(
+                    (item, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between gap-4"
+                      >
+                        <div className="flex items-center gap-2">
+                          <span
+                            className="block w-2.5 h-2.5 rounded-full"
+                            style={{ backgroundColor: item.color }}
+                          />
+                          {item.name}
+                        </div>
+                        <span>{item.value}%</span>
                       </div>
-                      <span>{item.value}%</span>
-                    </div>
+                    )
                   )
-                )
-              ) : (
-                <EmptyState />
-              )}
+                : null}
             </div>
           </CardContent>
         </Card>
@@ -220,20 +257,8 @@ export default function Page() {
         <div className="rounded-[12px] bg-[#171717] p-6 flex-1 min-w-[250px]">
           <div className="flex align-center gap-1">
             <p className="text-white font-dm-sans text-[18px] not-italic font-semibold leading-[20px] tracking-[var(--Letter-Spacing,0)]">
-              Week 1
+              Weekly Task Participation
             </p>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 0 18 18"
-              fill="none"
-            >
-              <path
-                d="M3.87099 7.55483C3.34059 6.94868 3.77107 6 4.57653 6H13.4237C14.2291 6 14.6596 6.94868 14.1292 7.55483L9.9879 12.2879C9.46492 12.8855 8.5353 12.8855 8.01232 12.2879L3.87099 7.55483ZM4.98973 7.125L8.859 11.547C8.9337 11.6324 9.06652 11.6324 9.14122 11.547L13.0105 7.125H4.98973Z"
-                fill="white"
-              />
-            </svg>
           </div>
 
           <div className="flex flex-col align-center flex-1 gap-[12px] mt-3">
@@ -255,13 +280,12 @@ export default function Page() {
                       />
                       <p className="text-[#CCC] font-dm-sans text-[12px] not-italic font-medium leading-[16px] whitespace-nowrap p-0 m-0">
                         {Number(task.participantCount || 0)}
-                        {/* {abbreviateNumber(calculatePercentage(Number(task.participantCount || 0), createAdminDashboard.numberOfActiveUser), 1)} Participants */}
                       </p>
                     </div>
                   </div>
                 ))
               ) : (
-                <EmptyState />
+                <EmptyState title="No weekly task participation data at the moment." />
               )
             ) : (
               loadingView
@@ -270,8 +294,8 @@ export default function Page() {
         </div>
       </section>
 
-      <section className="flex rounded-[12px] bg-[#171717] text-white overflow-hidden flex-wrap my-5">
-        <Card className="bg-[#171717] border-none">
+      <section className="flex rounded-[12px] bg-[#171717] text-white overflow-hidden flex-wrap my-5 w-full">
+        <Card className="bg-[#171717] border-none w-full">
           <CardHeader className="flex justify-between items-center">
             <CardTitle className="text-white font-dm-sans text-[18px] not-italic font-semibold">
               Top Users
