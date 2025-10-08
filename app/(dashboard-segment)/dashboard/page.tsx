@@ -36,9 +36,12 @@ export default function Page() {
   };
 
   const pieChartData = useMemo(
-  () => transformWeekStat(createAdminDashboard?.allWeekStat || [{ week: 0, percentage: 0 }]),
-  [createAdminDashboard?.allWeekStat]
-);
+    () =>
+      transformWeekStat(
+        createAdminDashboard?.allWeekStat || [{ week: 0, percentage: 0 }]
+      ),
+    [createAdminDashboard?.allWeekStat]
+  );
 
   const showPieChart =
     !isPending &&
@@ -232,23 +235,21 @@ export default function Page() {
               {isPending
                 ? loadingView
                 : createAdminDashboard
-                ? pieChartData.map(
-                    (item, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center justify-between gap-4"
-                      >
-                        <div className="flex items-center gap-2">
-                          <span
-                            className="block w-2.5 h-2.5 rounded-full"
-                            style={{ backgroundColor: item.color }}
-                          />
-                          {item.name}
-                        </div>
-                        <span>{item.value}%</span>
+                ? pieChartData.map((item, index) => (
+                    <div
+                      key={item.value || index}
+                      className="flex items-center justify-between gap-4"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span
+                          className="block w-2.5 h-2.5 rounded-full"
+                          style={{ backgroundColor: item.color }}
+                        />
+                        {item.name}
                       </div>
-                    )
-                  )
+                      <span>{item.value}%</span>
+                    </div>
+                  ))
                 : null}
             </div>
           </CardContent>
@@ -265,7 +266,7 @@ export default function Page() {
             {isPending ? (
               loadingView
             ) : createAdminDashboard ? (
-              createAdminDashboard?.weeklyTask && createAdminDashboard?.weeklyTask?.length > 0 ? (
+              createAdminDashboard?.weeklyTask?.length > 0 ? (
                 createAdminDashboard.weeklyTask.map((task, index) => (
                   <div key={task.id || index} className="">
                     <p className="text-white font-dm-sans text-[12px] not-italic font-semibold leading-[16px] tracking-[var(--Letter-Spacing,0)]">
