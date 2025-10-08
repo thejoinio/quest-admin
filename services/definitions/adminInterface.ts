@@ -25,7 +25,7 @@ export interface IAdminDashboardResData {
     id: string;
     title: string;
     participantCount: number;
-  }[];
+  }[] | [];
   allWeekStat: {
     week: number;
     percentage: number;

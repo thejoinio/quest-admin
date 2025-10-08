@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useFetchAdminDashboard } from "@/services/hooks/useAdminHomeManagement";
 import { EmptyState } from "@/components/empty";
 import TopUsers from "./TopUsers";
+import { useMemo } from "react";
 
 export default function Page() {
   const { data: createAdminDashboard, isPending } = useFetchAdminDashboard();
@@ -33,6 +34,16 @@ export default function Page() {
   const formatedNumber = (number: number, locales = "en-US", options = {}) => {
     return new Intl.NumberFormat(locales, options).format(number);
   };
+
+  const pieChartData = useMemo(
+  () => transformWeekStat(createAdminDashboard?.allWeekStat || [{ week: 0, percentage: 0 }]),
+  [createAdminDashboard?.allWeekStat]
+);
+
+  const showPieChart =
+    !isPending &&
+    createAdminDashboard?.allWeekStat?.length &&
+    createAdminDashboard.allWeekStat.some((stat) => stat.percentage > 0);
 
   return (
     <div className="bg-[#232323]">
@@ -186,53 +197,42 @@ export default function Page() {
           <CardHeader>
             <CardTitle className="text-lg">Task Participation</CardTitle>
           </CardHeader>
-          <CardContent className="flex items-center justify-between">
-            {(!isPending && !createAdminDashboard?.allWeekStat?.length) ||
-            createAdminDashboard?.allWeekStat.every(
-              (stat) => stat.percentage === 0
-            ) ? (
-              <EmptyState title="" />
-            ) : null}
-            {(!isPending && createAdminDashboard?.allWeekStat?.length) ||
-            createAdminDashboard?.allWeekStat.every(
-              (stat) => stat.percentage > 0
-            ) ? (
-              <div className="w-40 h-40">
-                <ResponsiveContainer>
-                  <PieChart>
-                    {isPending ? (
-                      loadingView
-                    ) : (
-                      <Pie
-                        data={transformWeekStat(
-                          createAdminDashboard?.allWeekStat || [
-                            { week: 0, percentage: 0 },
-                          ]
-                        )}
-                        innerRadius="60%"
-                        outerRadius="100%"
-                        dataKey="value"
-                        paddingAngle={3}
-                      >
-                        {transformWeekStat(
-                          createAdminDashboard?.allWeekStat || [
-                            { week: 0, percentage: 0 },
-                          ]
-                        ).map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
-                      </Pie>
-                    )}
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-            ) : null}
+          <CardContent className="flex items-center justify-between gap-2">
+            {isPending ? (
+              loadingView
+            ) : showPieChart ? (
+              <>
+                <div className="w-40 h-40">
+                  <ResponsiveContainer>
+                    <PieChart>
+                      {isPending ? (
+                        loadingView
+                      ) : (
+                        <Pie
+                          data={pieChartData}
+                          innerRadius="60%"
+                          outerRadius="100%"
+                          dataKey="value"
+                          paddingAngle={3}
+                        >
+                          {pieChartData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={entry.color} />
+                          ))}
+                        </Pie>
+                      )}
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              </>
+            ) : (
+              <EmptyState title="No task participation data available." />
+            )}
 
             <div className="space-y-3 text-sm">
               {isPending
                 ? loadingView
                 : createAdminDashboard
-                ? transformWeekStat(createAdminDashboard.allWeekStat).map(
+                ? pieChartData.map(
                     (item, index) => (
                       <div
                         key={index}
@@ -265,7 +265,7 @@ export default function Page() {
             {isPending ? (
               loadingView
             ) : createAdminDashboard ? (
-              createAdminDashboard.weeklyTask.length ? (
+              createAdminDashboard?.weeklyTask && createAdminDashboard?.weeklyTask?.length > 0 ? (
                 createAdminDashboard.weeklyTask.map((task, index) => (
                   <div key={task.id || index} className="">
                     <p className="text-white font-dm-sans text-[12px] not-italic font-semibold leading-[16px] tracking-[var(--Letter-Spacing,0)]">
